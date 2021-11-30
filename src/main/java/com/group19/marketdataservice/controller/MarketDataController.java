@@ -2,7 +2,6 @@ package com.group19.marketdataservice.controller;
 
 import com.group19.marketdataservice.domain.model.StockProduct;
 import com.group19.marketdataservice.domain.repository.ExchangeRepository;
-import com.group19.marketdataservice.enums.ExchangeName;
 import com.group19.marketdataservice.service.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,32 +19,40 @@ public class MarketDataController {
     @Autowired
     private ExchangeRepository exchangeRepository;
 
-    @GetMapping
-    public String hello(@RequestBody String callbackUrl) {
-        return callbackUrl;
-    }
 
     @PostMapping("/exchange-one")
     public ResponseEntity<?> fetchMarketDataFromExchangeOne(@RequestBody String callbackUrl) {
         return new ResponseEntity<>( marketDataService
-                .fetchStockProducts(exchangeRepository.findExchangeByName(ExchangeName.EXCHANGE_ONE.getExchangeName()).getExchangeURL(),
+                .fetchStockProducts(exchangeRepository.getById(1L).getExchangeURL() + "/subscription",
                         callbackUrl),HttpStatus.OK);
     }
     @PostMapping("/exchange-one/callback")
     public ResponseEntity<List<StockProduct>> callbackOne(@RequestBody List<StockProduct> stockProductList) {
        return new ResponseEntity<>(stockProductList, HttpStatus.OK);
     }
+
+    @DeleteMapping("/exchange-one")
+    public ResponseEntity<?> unsubscribeFromExchangeOne(@RequestBody String callbackUrl) {
+        return new ResponseEntity<>( marketDataService
+                .fetchStockProducts(exchangeRepository.getById(1L).getExchangeURL() + "/subscription",
+                        callbackUrl),HttpStatus.OK);
+    }
     @PostMapping("/exchange-two")
     public ResponseEntity<?> fetchMarketDataFromExchangeTwo(@RequestBody String callbackUrl) {
         return new ResponseEntity<>( marketDataService
-                .fetchStockProducts(exchangeRepository.findExchangeByName(ExchangeName.EXCHANGE_TWO.getExchangeName()).getExchangeURL(),
-                        callbackUrl),HttpStatus.OK);
+                .fetchStockProducts(exchangeRepository.getById(2L).getExchangeURL() + "/subscription", callbackUrl),HttpStatus.OK);
     }
 
 
     @PostMapping("/exchange-two/callback")
     public ResponseEntity<List<StockProduct>> callbackTwo(@RequestBody List<StockProduct> stockProductList) {
         return new ResponseEntity<>(stockProductList, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/exchange-two")
+    public ResponseEntity<?> unsubscribeFromExchangeTwo(@RequestBody String callbackUrl) {
+        return new ResponseEntity<>( marketDataService
+                .fetchStockProducts(exchangeRepository.getById(2L).getExchangeURL() + "/subscription", callbackUrl),HttpStatus.OK);
     }
 
 }

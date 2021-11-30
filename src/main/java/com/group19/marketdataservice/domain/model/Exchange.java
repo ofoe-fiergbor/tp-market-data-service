@@ -2,7 +2,6 @@ package com.group19.marketdataservice.domain.model;
 
 import com.group19.marketdataservice.enums.ExchangeStatus;
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "Exchange")
+@Table(name = "exchange")
 public class Exchange {
 
     @Id
@@ -19,15 +18,15 @@ public class Exchange {
     private Long id;
 
     @NotNull
-    @Column(name = "EXCHANGE")
+    @Column(name = "name")
     private String name;
 
     @NotNull
-    @Column(name = "EXCHANGE_URL")
+    @Column(name = "exchange_url")
     private String exchangeURL;
 
     @NotNull
-    @Column(name = "STATUS")
+    @Column(name = "status")
     private ExchangeStatus exchangeStatus;
 
     public Exchange(String name, String exchangeURL, ExchangeStatus exchangeStatus) {
