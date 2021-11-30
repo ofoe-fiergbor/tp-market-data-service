@@ -13,7 +13,6 @@ import java.util.List;
 @Component
 public class ExchangeDataLoader {
 
-
     @Autowired
     private ExchangeService exchangeService;
 
@@ -23,7 +22,7 @@ public class ExchangeDataLoader {
 
         List<Exchange> allExchanges = exchangeService.getAll();
         for (Exchange exchange: allExchanges) {
-            log.info("{} loaded into the system.", exchange.getName());
+            log.info("{} loaded into the database.", exchange.getName());
         }
     }
 
