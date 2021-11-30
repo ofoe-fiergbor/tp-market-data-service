@@ -21,11 +21,13 @@ public class MarketDataController {
 
 
     @PostMapping("/exchange-one")
-    public ResponseEntity<?> fetchMarketDataFromExchangeOne(@RequestBody String callbackUrl) {
+    public ResponseEntity<?> fetchMarketDataFromExchangeOne() {
         return new ResponseEntity<>( marketDataService
                 .fetchStockProducts(exchangeRepository.getById(1L).getExchangeURL() + "/subscription",
-                        callbackUrl),HttpStatus.OK);
+                        "https://localhost:8086/market-data/exchange-one/callback"),HttpStatus.OK);
     }
+
+
     @PostMapping("/exchange-one/callback")
     public ResponseEntity<List<StockProduct>> callbackOne(@RequestBody List<StockProduct> stockProductList) {
        return new ResponseEntity<>(stockProductList, HttpStatus.OK);
@@ -40,7 +42,7 @@ public class MarketDataController {
     @PostMapping("/exchange-two")
     public ResponseEntity<?> fetchMarketDataFromExchangeTwo(@RequestBody String callbackUrl) {
         return new ResponseEntity<>( marketDataService
-                .fetchStockProducts(exchangeRepository.getById(2L).getExchangeURL() + "/subscription", callbackUrl),HttpStatus.OK);
+                .fetchStockProducts(exchangeRepository.getById(2L).getExchangeURL() + "/subscription", callbackUrl), HttpStatus.OK);
     }
 
 
@@ -52,7 +54,9 @@ public class MarketDataController {
     @DeleteMapping("/exchange-two")
     public ResponseEntity<?> unsubscribeFromExchangeTwo(@RequestBody String callbackUrl) {
         return new ResponseEntity<>( marketDataService
-                .fetchStockProducts(exchangeRepository.getById(2L).getExchangeURL() + "/subscription", callbackUrl),HttpStatus.OK);
+                .fetchStockProducts(exchangeRepository.getById(2L)
+                        .getExchangeURL() + "/subscription",
+                        "https://localhost:8086/market-data/exchange-two/callback"), HttpStatus.OK);
     }
 
 }
