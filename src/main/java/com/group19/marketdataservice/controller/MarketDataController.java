@@ -19,42 +19,65 @@ public class MarketDataController {
     @Autowired
     private ExchangeRepository exchangeRepository;
 
+    @GetMapping("/fetch/exchange-one/{product}")
+    public ResponseEntity<StockProduct> fetchSingleProductOne(@PathVariable("product") String product) {
+        return new ResponseEntity<>(marketDataService.fetchSingleStockProduct(
+                exchangeRepository.getById(1L).getExchangeURL()+"/"+product), HttpStatus.OK);
+    }
+    @GetMapping("/fetch/exchange-two/{product}")
+    public ResponseEntity<StockProduct> fetchSingleProductTwo(@PathVariable String product) {
+        return new ResponseEntity<>(marketDataService.fetchSingleStockProduct(
+                exchangeRepository.getById(2L).getExchangeURL()+"/"+product), HttpStatus.OK);
+    }
 
-    @PostMapping("/exchange-one")
-    public ResponseEntity<?> fetchMarketDataFromExchangeOne() {
-        return new ResponseEntity<>( marketDataService
-                .fetchStockProducts(exchangeRepository.getById(1L).getExchangeURL() + "/subscription",
-                        "https://localhost:8086/market-data/exchange-one/callback"),HttpStatus.OK);
+    @GetMapping("/fetch/exchange-one")
+    public ResponseEntity<List<StockProduct>> fetchExchangeDataOne() {
+        return new ResponseEntity<>(marketDataService
+                .fetchStockProduct(exchangeRepository.getById(1L).getExchangeURL()), HttpStatus.OK);
+    }
+    @GetMapping("/fetch/exchange-two")
+    public ResponseEntity<List<StockProduct>> fetchExchangeDataTwo() {
+        return new ResponseEntity<>(marketDataService
+                .fetchStockProduct(exchangeRepository.getById(2L).getExchangeURL()), HttpStatus.OK);
     }
 
 
-    @PostMapping("/exchange-one/callback")
+    @PostMapping("subscribe/exchange-one")
+    public ResponseEntity<?> subscribeFromExchangeOne() {
+        return new ResponseEntity<>( marketDataService
+                .subscribeToStockProducts(exchangeRepository.getById(1L).getExchangeURL() + "/subscription",
+                        "https://localhost:8086/subscribe/market-data/exchange-one/callback"),HttpStatus.OK);
+    }
+
+
+    @PostMapping("subscribe/exchange-one/callback")
     public ResponseEntity<List<StockProduct>> callbackOne(@RequestBody List<StockProduct> stockProductList) {
        return new ResponseEntity<>(stockProductList, HttpStatus.OK);
     }
 
-    @DeleteMapping("/exchange-one")
+    @DeleteMapping("subscribe/exchange-one")
     public ResponseEntity<?> unsubscribeFromExchangeOne(@RequestBody String callbackUrl) {
         return new ResponseEntity<>( marketDataService
-                .fetchStockProducts(exchangeRepository.getById(1L).getExchangeURL() + "/subscription",
+                .subscribeToStockProducts(exchangeRepository.getById(1L).getExchangeURL() + "/subscription",
                         callbackUrl),HttpStatus.OK);
     }
-    @PostMapping("/exchange-two")
-    public ResponseEntity<?> fetchMarketDataFromExchangeTwo(@RequestBody String callbackUrl) {
+    @PostMapping("/subscribe/exchange-two")
+    public ResponseEntity<?> subscribeFromExchangeTwo() {
         return new ResponseEntity<>( marketDataService
-                .fetchStockProducts(exchangeRepository.getById(2L).getExchangeURL() + "/subscription", callbackUrl), HttpStatus.OK);
+                .subscribeToStockProducts(exchangeRepository.getById(2L).getExchangeURL() + "/subscription",
+                        "https://localhost:8086/subscribe/market-data/exchange-one/callback"), HttpStatus.OK);
     }
 
 
-    @PostMapping("/exchange-two/callback")
+    @PostMapping("/subscribe/exchange-two/callback")
     public ResponseEntity<List<StockProduct>> callbackTwo(@RequestBody List<StockProduct> stockProductList) {
         return new ResponseEntity<>(stockProductList, HttpStatus.OK);
     }
 
-    @DeleteMapping("/exchange-two")
+    @DeleteMapping("/subscribe/exchange-two")
     public ResponseEntity<?> unsubscribeFromExchangeTwo(@RequestBody String callbackUrl) {
         return new ResponseEntity<>( marketDataService
-                .fetchStockProducts(exchangeRepository.getById(2L)
+                .subscribeToStockProducts(exchangeRepository.getById(2L)
                         .getExchangeURL() + "/subscription",
                         "https://localhost:8086/market-data/exchange-two/callback"), HttpStatus.OK);
     }
