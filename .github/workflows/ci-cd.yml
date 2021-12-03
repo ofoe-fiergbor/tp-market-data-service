@@ -64,6 +64,7 @@ jobs:
       - name: AWS Deploy push
         run: |
           aws deploy push \
+          --region eu-west-2
           --application-name aws-codedeploy \
           --description "This is a revision for the aws-codedeploy-${{ github.sha }}" \
           --ignore-hidden-files \
