@@ -51,20 +51,25 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Run AWS CLI v1.19.59 commands
-        uses: GuillaumeFalourd/aws-clis-action@v1
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: "us-east-2"
+      - name: Install python
+        uses: actions/setup-python@v2
         with:
-          args: s3 ls
+          python-version: "3.8"
+
+      - name: Install aws cli
+        run: python3 -m pip install --user awscli
+
+      - name: configure aws cli
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
 
       # Deploy push to AWS S3
       - name: AWS Deploy push
         run: |
           aws deploy push \
-          --region us-east-2
           --application-name aws-codedeploy \
           --description "This is a revision for the aws-codedeploy-${{ github.sha }}" \
           --ignore-hidden-files \
