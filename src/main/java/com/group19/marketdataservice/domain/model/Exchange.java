@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Data
-@Entity
+@Entity(name = "exchanges")
 @NoArgsConstructor
-@Table(name = "exchange")
 public class Exchange {
 
     @Id

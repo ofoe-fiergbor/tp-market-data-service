@@ -1,6 +1,6 @@
 package com.group19.marketdataservice.service;
 
-import com.group19.marketdataservice.domain.model.StockProduct;
+import com.group19.marketdataservice.domain.dto.StockProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;

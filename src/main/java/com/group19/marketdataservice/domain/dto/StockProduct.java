@@ -1,4 +1,4 @@
-package com.group19.marketdataservice.domain.model;
+package com.group19.marketdataservice.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

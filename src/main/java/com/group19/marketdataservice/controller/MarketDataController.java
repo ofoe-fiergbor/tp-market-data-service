@@ -1,6 +1,6 @@
 package com.group19.marketdataservice.controller;
 
-import com.group19.marketdataservice.domain.model.StockProduct;
+import com.group19.marketdataservice.domain.dto.StockProduct;
 import com.group19.marketdataservice.domain.repository.ExchangeRepository;
 import com.group19.marketdataservice.service.MarketDataService;
 import org.springframework.beans.factory.annotation.Autowired;
