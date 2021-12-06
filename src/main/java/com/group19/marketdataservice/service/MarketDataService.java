@@ -1,54 +1,39 @@
 package com.group19.marketdataservice.service;
 
-import com.group19.marketdataservice.model.MarketData;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.group19.marketdataservice.domain.dto.StockProduct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
-
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class MarketDataService {
-    private  String EXCHANGE_ONE_URL = "https://exchange.matraining.com/md/";
-    private  String EXCHANGE_TWO_URL = "https://exchange2.matraining.com/md/";
 
-    private final RestTemplate restTemplate;
+    @Autowired
+    private RestTemplate restTemplate;
 
-    public List<MarketData> exchangeOneMarketData(){
-        List<MarketData> marketData = restTemplate.getForObject(EXCHANGE_ONE_URL,List.class);
-        return marketData;
+    public String subscribeToStockProducts(String uri, String callback){
+        HttpEntity<String> callbackUrl = new HttpEntity<>(callback);
+        ResponseEntity<?> response = restTemplate.exchange(uri, HttpMethod.POST, callbackUrl, String.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return (String) response.getBody();
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request Failed");
     }
 
-    public List<MarketData> exchangeTwoMarketData(){
-        List<MarketData> marketData = restTemplate.getForObject(EXCHANGE_TWO_URL,List.class);
-        return marketData;
+    public List<StockProduct> fetchStockProduct(String uri) {
+        return restTemplate.getForObject(uri, List.class );
     }
 
-    public MarketData exchangeTwoMarketDataProductType(String productType){
-        String url = EXCHANGE_TWO_URL+productType;
-        MarketData marketData = restTemplate.getForObject("https://exchange2.matraining.com/md/"+productType,MarketData.class);
-        return marketData;
+    public StockProduct fetchSingleStockProduct(String uri) {
+        return restTemplate.getForObject(uri, StockProduct.class );
     }
-
-    public MarketData exchangeOneMarketDataProductType(String productType){
-        String url = EXCHANGE_ONE_URL+productType;
-        MarketData marketData = restTemplate.getForObject("https://exchange.matraining.com/md/"+productType,MarketData.class);
-        return marketData;
-    }
-
-    public List<MarketData> allMarketData(){
-        List<MarketData> marketData = new ArrayList<>();
-        marketData.addAll(exchangeOneMarketData());
-        marketData.addAll(exchangeTwoMarketData());
-
-        return marketData;
-    }
-
-
 
 }
