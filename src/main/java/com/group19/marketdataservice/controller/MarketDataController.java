@@ -52,6 +52,7 @@ public class MarketDataController {
 
     @PostMapping("subscribe/exchange-one/callback")
     public ResponseEntity<List<StockProduct>> callbackOne(@RequestBody List<StockProduct> stockProductList) {
+        //redis implementation
        return new ResponseEntity<>(stockProductList, HttpStatus.OK);
     }
 
