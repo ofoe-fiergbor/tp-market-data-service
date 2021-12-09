@@ -92,6 +92,6 @@ jobs:
          HOST: "18.224.229.59"
          USERNAME: "ubuntu"
          PORT: "22"
-         KEY: ${{ secrets.AWS_SUPERVISOR_KEY }}
+         KEY: ${{ secrets.AWS_SUPERVISOR_KEY_MARKET_DATA }}
          script: |
            sudo supervisorctl restart all
