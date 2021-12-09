@@ -85,3 +85,13 @@ jobs:
            --deployment-group-name tp-market-data-service \
            --file-exists-behavior OVERWRITE \
            --s3-location bucket=aws-codedeploy-deployments-try,key=staging-aws-codedeploy-dc1ad63e3952d6515378dedcc10a91f123544abd.zip,bundleType=zip \
+
+      - name: Restart supervisor
+        uses: appleboy/ssh-action@master
+        with:
+         HOST: "18.224.229.59"
+         USERNAME: "ubuntu"
+         PORT: "22"
+         KEY: ${{ secrets.AWS_SUPERVISOR_KEY }}
+         script: |
+           sudo supervisorctl restart all
