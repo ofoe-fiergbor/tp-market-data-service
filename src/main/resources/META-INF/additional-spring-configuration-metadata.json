@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "system.exchange_one",
+      "type": "java.lang.String",
+      "description": "Description for system.exchange_one."
+  }
+] }
